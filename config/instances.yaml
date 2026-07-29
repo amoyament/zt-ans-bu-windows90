@@ -152,7 +152,6 @@ virtualmachines:
       Set-ExecutionPolicy Bypass -Scope Process -Force
       iwr https://community.chocolatey.org/install.ps1 -UseBasicParsing | iex
       choco install microsoft-edge -y
-      slmgr /rearm
     services:
       - name: windows
         ports:

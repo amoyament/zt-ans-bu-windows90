@@ -118,13 +118,18 @@ If you click the three dots shown on line 21 in the above output, you will see a
 
 == ☑️ Running the win_user command
 
-Now, let’s reset the local admin account with the `win_user` module. Our arguments parameter is going to get a little more complex now.
+Now, let’s create a new local user account with the `win_user` module. Our arguments parameter is going to get a little more complex now.
+
+[WARNING]
+====
+*DO NOT change the administrator password!* Changing the administrator account password will lock you out of the Windows system. Always create a NEW user when testing the win_user module.
+====
 
 [cols="1,2,2",options="header"]
 |===
 | Key | Value | Note
 | Module | `win_user` |
-| Arguments | `name=administrator password=Passw0rd!` |
+| Arguments | `name=ansibleuser password=Passw0rd! state=present groups=Users` |
 | Limit | | This should display the host you selected in the previous step
 |===
 
