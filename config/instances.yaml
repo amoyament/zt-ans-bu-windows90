@@ -12,6 +12,7 @@ containers:
       GITEA__database__DB_TYPE: sqlite3
       GITEA__database__PATH: /data/gitea/gitea.db
       GITEA__picture__DISABLE_GRAVATAR: "true"
+      GITEA__repository__DEFAULT_BRANCH: main
       GITEA__repository__DEFAULT_PRIVATE: "false"
       GITEA__repository__DEFAULT_PUSH_CREATE_PRIVATE: "false"
       GITEA__repository__ENABLE_PUSH_CREATE_ORG: "true"
@@ -41,7 +42,10 @@ containers:
     commands:
         - gitea admin user create --admin --username gitea --password gitea --email dummy@dummy.com --must-change-password=false
         - gitea admin user create --admin --username student --password learn_ansible --must-change-password=false --email student@localhost
-        - 'sh -c ''curl --retry 30 --retry-delay 2 --retry-connrefused -sf http://127.0.0.1:3000/api/v1/version && curl -sf -u student:learn_ansible -H Content-Type:application/json -d {"name":"workshop_project","auto_init":true,"private":false,"default_branch":"main"} http://127.0.0.1:3000/api/v1/user/repos'''
+        - curl --retry 30 --retry-delay 2 --retry-connrefused -sf http://127.0.0.1:3000/api/v1/version
+        # k8s_exec splits this with shlex and execs it. Keep the JSON in single quotes.
+        # Wrapping it in sh -c lets that shell strip the quotes, and Gitea rejects the body.
+        - 'curl -sf -u student:learn_ansible -H Content-Type:application/json -d ''{"name":"workshop_project","auto_init":true,"private":false,"default_branch":"main"}'' http://127.0.0.1:3000/api/v1/user/repos'
     memory: 2Gi
     services:
       - name: gitea
