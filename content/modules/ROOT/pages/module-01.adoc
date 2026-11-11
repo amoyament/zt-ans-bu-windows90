@@ -128,7 +128,7 @@ number in SCM URL*)
 | SCM Type | Git |
 | SCM URL | http://gitea:3000/student/workshop_project.git | URL obtained from Step 1
 | SCM BRANCH | | Intentionally blank
-| SCM CREDENTIAL | Git Credential |
+| SOURCE CONTROL CREDENTIAL | Git Credential |
 |===
 
 +

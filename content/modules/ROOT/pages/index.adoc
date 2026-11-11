@@ -2,8 +2,6 @@
 
 Welcome to the {lab_name}!
 
-image::rhel-logo-black.jpg[Ansible Automation Platform logo with Red Hat branding,55%,55%]
-
 == What you'll learn
 
 In this hands-on workshop, you will automate a Windows server with Red Hat Ansible Automation Platform. You will set up automation controller, run ad-hoc commands and playbooks, publish that automation as job templates and roles, and then patch Windows, install software with Chocolatey, and connect the jobs in a workflow.

@@ -19,8 +19,8 @@ Edit `site.yml` and add the following:
 [source,yaml]
 ----
 ---
-- hosts: windows
-  name: This is my Windows patching playbook
+- name: This is my Windows patching playbook
+  hosts: windows
   tasks:
     - name: Install Windows Updates
       ansible.windows.win_updates:

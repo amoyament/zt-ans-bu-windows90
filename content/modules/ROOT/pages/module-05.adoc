@@ -436,4 +436,4 @@ After it launches, you should be redirected and can watch the output of
 the job in real time.
 
 +
-When the job has successfully completed, you can navigate back to the `windows` tab and verify the you can get to http://localhost:8080 on the Microsoft Edge browser.
+When the job has successfully completed, you can navigate back to the `windows` tab and verify the you can get to http://localhost:8080 on the browser.

@@ -157,7 +157,7 @@ playbook.
 +
 image::4-job-summary-output.png[Play and Task Output,link=self,window=_blank]
 
-. When the job has successfully completed, navigate to your `windows` tab. This is your Windows host. Open Microsoft Edge from the Windows desktop and navigate to: http://localhost
+. When the job has successfully completed, navigate to your `windows` tab. This is your Windows host. Open a browser from the Windows desktop and navigate to: http://localhost
 
 +
 If all went well, you should see something like this, but with your own
