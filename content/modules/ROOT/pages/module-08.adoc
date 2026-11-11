@@ -1,0 +1,375 @@
+= 8. Chocolatey
+
+Chocolatey is a package manager for Windows. The `chocolatey.chocolatey` collection lets Ansible install, update, and configure packages on a Windows host. The collection is already available in the *Windows Workshop Execution Environment*, and the Chocolatey client is already installed on the Windows host.
+
+[#adhoc-install]
+== ☑️ Installing a package
+
+Open *Inventories* and select *Workshop Inventory*. Open *Hosts*, select the `windows` host, and click *Run Command*.
+
+image::8-chocolatey-adhoc-run-command.png[Run an ad-hoc command,link=self,window=_blank]
+
+Fill out the command form.
+
+[cols="1,2",options="header"]
+|===
+| Field | Value
+
+| Module
+| `win_chocolatey`
+
+| Arguments
+| `name=git state=present`
+
+| Limit
+| windows
+|===
+
+Click *Next*.
+
+[cols="1,2",options="header"]
+|===
+| Field | Value
+
+| Execution environment
+| Windows Workshop Execution Environment
+|===
+
+Click *Next*.
+
+[cols="1,2",options="header"]
+|===
+| Field | Value
+
+| Machine credential
+| Windows Credential
+|===
+
+Launch the command. The job reports *changed* because `git` was installed.
+
+image::8-chocolatey-run-win_chocolatey-result.png[Git installed with win_chocolatey,link=self,window=_blank]
+
+Run the same command again from the rocket icon on the job output page. The second run reports *ok*. `win_chocolatey` is idempotent, so an already installed package is not installed again.
+
+image::8-chocolatey-rerun-win_chocolatey-result.png[Second win_chocolatey run,link=self,window=_blank]
+
+[#install-packages]
+== ☑️ Installing specific versions
+
+An ad-hoc command is useful for one package. A playbook is a better fit when you want several packages at specific versions.
+
+In Visual Studio Code, under *WORKSHOP_PROJECT*, create a folder named `chocolatey` and a file named `install_packages.yml`.
+
+image::8-chocolatey-empty-install_packages-editor.png[Empty install_packages.yml,link=self,window=_blank]
+
+Add this playbook:
+
+[source,yaml]
+----
+---
+- name: Install specific versions of packages using Chocolatey
+  hosts: windows
+  gather_facts: false
+  vars:
+    choco_packages:
+      - name: nodejs
+        version: 13.0.0
+      - name: python
+        version: 3.6.0
+  tasks:
+    - name: Install specific versions of packages sequentially
+      chocolatey.chocolatey.win_chocolatey:
+        name: "{{ item.name }}"
+        version: "{{ item.version }}"
+        force: true
+      loop: "{{ choco_packages }}"
+
+    - name: Check python version
+      ansible.windows.win_command: python --version
+      register: check_python_version
+
+    - name: Check nodejs version
+      ansible.windows.win_command: node --version
+      register: check_node_version
+
+    - name: Show installed versions
+      ansible.builtin.debug:
+        msg: Python version is {{ check_python_version.stdout_lines[0] }} and Node.js version is {{ check_node_version.stdout_lines[0] }}
+----
+
+`gather_facts` is disabled because this play does not use the discovered host facts. The loop installs each package at the version in `choco_packages`. The `win_command` tasks record the installed versions, and the debug task prints them.
+
+Save, commit, and push:
+
+....
+git add *
+git commit -m "Adding install_packages.yml"
+git push
+....
+
+In automation controller, sync *Ansible Workshop Project*.
+
+image::8-project-sync.png[Sync the project,link=self,window=_blank]
+
+Create a job template. Click image:8-add.png[Add,link=self,window=_blank] and select *Create job template*.
+
+[cols="1,2",options="header"]
+|===
+| Field | Value
+
+| Name
+| Chocolatey - Install Packages
+
+| Description
+| Template for the install_packages playbook
+
+| Job Type
+| Run
+
+| Inventory
+| Workshop Inventory
+
+| Project
+| Ansible Workshop Project
+
+| Execution Environment
+| Windows Workshop Execution Environment
+
+| Playbook
+| `chocolatey/install_packages.yml`
+
+| Credentials
+| Windows Credential
+
+| Limit
+| windows
+|===
+
+image::8-create-install-packages-job-template.png[Install packages job template,link=self,window=_blank]
+
+Save the template and launch it. The job installs Node.js 13.0.0 and Python 3.6.0, then prints both versions.
+
+image::8-install-packages-job-run-successful.png[Install packages job output,link=self,window=_blank]
+
+[#update-packages]
+== ☑️ Updating packages
+
+`win_chocolatey` also removes and updates packages. The `state` value selects the action:
+
+* `present` ensures the package is installed. This is the default.
+* `absent` ensures the package is not installed.
+* `latest` ensures the package is installed at the newest available version.
+
+The previous playbook installed older versions on purpose. This playbook updates every package Chocolatey has installed by setting `name` to `all` and `state` to `latest`.
+
+Create `chocolatey/update_packages.yml`:
+
+[source,yaml]
+----
+---
+- name: Update all packages using Chocolatey
+  hosts: windows
+  gather_facts: false
+  tasks:
+    - name: Update all installed packages
+      chocolatey.chocolatey.win_chocolatey:
+        name: all
+        state: latest
+
+    - name: Check python version
+      ansible.windows.win_command: python --version
+      register: check_python_version
+
+    - name: Check nodejs version
+      ansible.windows.win_command: node --version
+      register: check_node_version
+
+    - name: Show installed versions
+      ansible.builtin.debug:
+        msg: Python version is {{ check_python_version.stdout_lines[0] }} and Node.js version is {{ check_node_version.stdout_lines[0] }}
+----
+
+Commit and push the file, then sync the project.
+
+You can copy the install template instead of starting from a blank form. On *Templates*, click the copy icon image:8-copy.png[Copy,link=self,window=_blank] next to *Chocolatey - Install Packages*, then edit the copy.
+
+[cols="1,2",options="header"]
+|===
+| Field | Value
+
+| Name
+| Chocolatey - Update Packages
+
+| Description
+| Template for the update_packages playbook
+
+| Job Type
+| Run
+
+| Inventory
+| Workshop Inventory
+
+| Project
+| Ansible Workshop Project
+
+| Execution Environment
+| Windows Workshop Execution Environment
+
+| Playbook
+| `chocolatey/update_packages.yml`
+
+| Credentials
+| Windows Credential
+
+| Limit
+| windows
+|===
+
+Launch the template. The debug message should show newer Node.js and Python versions than the install job.
+
+image::8-update-packages-job-run-successful.png[Update packages job output,link=self,window=_blank]
+
+[#chocolatey-facts]
+== ☑️ Gathering Chocolatey facts
+
+`win_chocolatey_facts` collects the client configuration, features, sources, and installed packages. Create `chocolatey/chocolatey_configuration.yml`:
+
+[source,yaml]
+----
+---
+- name: Chocolatey facts and configuration
+  hosts: windows
+  gather_facts: false
+  tasks:
+    - name: Gather facts from Chocolatey
+      chocolatey.chocolatey.win_chocolatey_facts:
+
+    - name: Display the gathered facts
+      ansible.builtin.debug:
+        var: ansible_chocolatey
+----
+
+The facts are stored in `ansible_chocolatey`. Commit, push, and sync the project, then create this job template.
+
+[cols="1,2",options="header"]
+|===
+| Field | Value
+
+| Name
+| Chocolatey - Facts and configuration
+
+| Description
+| Template for the chocolatey_configuration playbook
+
+| Job Type
+| Run
+
+| Inventory
+| Workshop Inventory
+
+| Project
+| Ansible Workshop Project
+
+| Execution Environment
+| Windows Workshop Execution Environment
+
+| Playbook
+| `chocolatey/chocolatey_configuration.yml`
+
+| Credentials
+| Windows Credential
+
+| Limit
+| windows
+|===
+
+Launch it and scroll through `ansible_chocolatey`. You should see `git`, `nodejs`, and `python` in the package list, along with the community source those packages came from.
+
+image::8-chocolatey-configuration-job-run-1-successful.png[Chocolatey facts output,link=self,window=_blank]
+
+Individual values are keys in that object. `ansible_chocolatey.packages` is the list of installed packages, which is what you would use to build a report.
+
+[#configure-chocolatey]
+== ☑️ Configuring Chocolatey
+
+`win_chocolatey_config` changes Chocolatey settings. The facts from the previous run show the defaults: `cacheLocation` is empty, and `commandExecutionTimeoutSeconds` is `2700`. This step sets the cache directory to `C:\ChocoCache` and the timeout to `3600` seconds.
+
+Add these tasks to `chocolatey_configuration.yml`, after the task that displays `ansible_chocolatey`:
+
+[source,yaml]
+----
+    - name: Create a directory for the Chocolatey cache
+      ansible.windows.win_file:
+        path: C:\ChocoCache
+        state: directory
+
+    - name: Configure Chocolatey to use the new cache directory
+      chocolatey.chocolatey.win_chocolatey_config:
+        name: cacheLocation
+        state: present
+        value: C:\ChocoCache
+
+    - name: Change the execution timeout
+      chocolatey.chocolatey.win_chocolatey_config:
+        name: commandExecutionTimeoutSeconds
+        state: present
+        value: 3600
+
+    - name: Gather facts after reconfiguring Chocolatey
+      chocolatey.chocolatey.win_chocolatey_facts:
+
+    - name: Display the new configuration
+      ansible.builtin.debug:
+        var: ansible_chocolatey.config
+----
+
+The finished playbook is:
+
+[source,yaml]
+----
+---
+- name: Chocolatey facts and configuration
+  hosts: windows
+  gather_facts: false
+  tasks:
+    - name: Gather facts from Chocolatey
+      chocolatey.chocolatey.win_chocolatey_facts:
+
+    - name: Display the gathered facts
+      ansible.builtin.debug:
+        var: ansible_chocolatey
+
+    - name: Create a directory for the Chocolatey cache
+      ansible.windows.win_file:
+        path: C:\ChocoCache
+        state: directory
+
+    - name: Configure Chocolatey to use the new cache directory
+      chocolatey.chocolatey.win_chocolatey_config:
+        name: cacheLocation
+        state: present
+        value: C:\ChocoCache
+
+    - name: Change the execution timeout
+      chocolatey.chocolatey.win_chocolatey_config:
+        name: commandExecutionTimeoutSeconds
+        state: present
+        value: 3600
+
+    - name: Gather facts after reconfiguring Chocolatey
+      chocolatey.chocolatey.win_chocolatey_facts:
+
+    - name: Display the new configuration
+      ansible.builtin.debug:
+        var: ansible_chocolatey.config
+----
+
+Commit and push, sync the project, and run *Chocolatey - Facts and configuration* again. The last debug task should show `cacheLocation` as `C:\ChocoCache` and `commandExecutionTimeoutSeconds` as `3600`.
+
+image::8-chocolatey-configuration-job-run-2-successful.png[Updated Chocolatey configuration,link=self,window=_blank]
+
+The same collection also includes `win_chocolatey_source` and `win_chocolatey_feature` for package sources and client features.
+
+== Troubleshooting
+
+If you have encountered an issue or have noticed something not quite right, please link:https://github.com/ansible/workshops/issues/new?labels=ansibe-builder&title=Issue+with+Windows+automation+90&assignees=amoyament[open an issue on GitHub].

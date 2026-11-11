@@ -1,0 +1,181 @@
+= 7. Windows Updates
+
+The `win_updates` module checks for or installs Windows updates through the Windows Update service on the host. This lab's Windows server is configured to use Microsoft Update, so the job can search for and install updates directly.
+
+You can limit the install to categories such as security updates, and you can choose whether Ansible reboots the host when an update requires it.
+
+[#create-the-playbook]
+== ☑️ Creating the playbook
+
+In Visual Studio Code, open the Explorer view and find the *WORKSHOP_PROJECT* section where you created `iis_basic`.
+
+. Hover over *WORKSHOP_PROJECT* and click *New Folder*. Name the folder `win_updates`.
+. Right-click `win_updates`, select *New File*, and name it `site.yml`.
+
+image::7-create-win_updates.png[Empty site.yml,link=self,window=_blank]
+
+Edit `site.yml` and add the following:
+
+[source,yaml]
+----
+---
+- hosts: windows
+  name: This is my Windows patching playbook
+  tasks:
+    - name: Install Windows Updates
+      ansible.windows.win_updates:
+        category_names: "{{ categories | default(omit) }}"
+        reboot: "{{ reboot_server | default(true) }}"
+----
+
+image::7-win_update-playbook.png[Windows updates playbook,link=self,window=_blank]
+
+[NOTE]
+====
+* `win_updates` checks for updates and installs the ones you select.
+* `category_names` limits the install to the categories passed in by the job template survey. When the survey does not provide a value, the module's own default is used.
+* `reboot` reboots the host when an update requires it and continues the install afterward. The survey controls this value.
+====
+
+[#save-and-commit]
+== ☑️ Saving and committing
+
+Save the file, then commit and push it the same way you did in the earlier exercises. In the VS Code terminal:
+
+....
+git add *
+git commit -m "Adding windows update playbook"
+git push
+....
+
+Use the `student` / `learn_ansible` credentials if Git asks you to authenticate.
+
+[#create-job-template]
+== ☑️ Creating the job template
+
+In automation controller, open *Projects* under *Automation Execution* and sync *Ansible Workshop Project* so the new playbook is available.
+
+Then open *Templates* and click *Create template* → *Create job template*.
+
+[cols="1,2",options="header"]
+|===
+| Field | Value
+
+| Name
+| Windows Updates
+
+| Job Type
+| Run
+
+| Inventory
+| Workshop Inventory
+
+| Project
+| Ansible Workshop Project
+
+| Playbook
+| `win_updates/site.yml`
+
+| Execution Environment
+| Windows Workshop Execution Environment
+
+| Credentials
+| Windows Credential
+
+| Limit
+| windows
+
+| Options
+| [x] Enable fact storage
+|===
+
+image::7-win_update-template.png[Create the Windows Updates job template,link=self,window=_blank]
+
+Click *Create job template*.
+
+=== Add a survey
+
+Open the *Survey* tab and create the first question.
+
+[cols="1,2",options="header"]
+|===
+| Field | Value
+
+| Question
+| Which categories to install?
+
+| Answer variable name
+| categories
+
+| Answer type
+| Multiple choice (multiple select)
+
+| Default option
+| CriticalUpdates, SecurityUpdates
+
+| Options
+| Required
+|===
+
+Enter these multiple choice options, one per line:
+
+....
+Application
+Connectors
+CriticalUpdates
+DefinitionUpdates
+DeveloperKits
+FeaturePacks
+Guidance
+SecurityUpdates
+ServicePacks
+Tools
+UpdateRollups
+Updates
+....
+
+image::7-category-survey.png[Category survey question,link=self,window=_blank]
+
+Create a second question.
+
+[cols="1,2",options="header"]
+|===
+| Field | Value
+
+| Question
+| Reboot after install?
+
+| Answer variable name
+| reboot_server
+
+| Answer type
+| Multiple choice (single select)
+
+| Multiple choice options
+| Yes, No
+
+| Default option
+| Yes
+
+| Options
+| Required
+|===
+
+image::7-reboot-survey.png[Reboot survey question,link=self,window=_blank]
+
+Back on the job template, turn *Survey enabled* on.
+
+[#run-the-playbook]
+== ☑️ Running the playbook
+
+. Open *Templates*.
+. Launch *Windows Updates*.
+. Leave the default categories selected, or choose your own.
+. Choose *Yes* for *Reboot after install?*
+. Click *Next*, then *Launch*.
+
+The job log updates while the host is patched. A cumulative update can take several minutes. If a reboot is required, the job waits for Windows to come back and then finishes the install.
+
+== Troubleshooting
+
+If you have encountered an issue or have noticed something not quite right, please link:https://github.com/ansible/workshops/issues/new?labels=ansibe-builder&title=Issue+with+Windows+automation+90&assignees=amoyament[open an issue on GitHub].

@@ -1,3 +1,5 @@
+* xref:index.adoc[Welcome]
+
 * xref:module-01.adoc[1. Controller]
 ** xref:module-01.adoc#logging-in[Logging into Controller]
 ** xref:module-01.adoc#creating-machine-credentials[Creating machine credentials]
@@ -32,3 +34,21 @@
 ** xref:module-06.adoc#directory-structure[Creating your directory structure]
 ** xref:module-06.adoc#create-role[Breaking up site.yml to create the role]
 ** xref:module-06.adoc#running-playbook[Running your new playbook]
+
+* xref:module-07.adoc[7. Windows Updates]
+** xref:module-07.adoc#create-the-playbook[Creating the playbook]
+** xref:module-07.adoc#save-and-commit[Saving and committing]
+** xref:module-07.adoc#create-job-template[Creating the job template]
+** xref:module-07.adoc#run-the-playbook[Running the playbook]
+
+* xref:module-08.adoc[8. Chocolatey]
+** xref:module-08.adoc#adhoc-install[Installing a package]
+** xref:module-08.adoc#install-packages[Installing specific versions]
+** xref:module-08.adoc#update-packages[Updating packages]
+** xref:module-08.adoc#chocolatey-facts[Gathering Chocolatey facts]
+** xref:module-08.adoc#configure-chocolatey[Configuring Chocolatey]
+
+* xref:module-09.adoc[9. Workflows]
+** xref:module-09.adoc#create-the-workflow[Creating the workflow]
+** xref:module-09.adoc#add-the-jobs[Adding the jobs]
+** xref:module-09.adoc#run-the-workflow[Running the workflow]

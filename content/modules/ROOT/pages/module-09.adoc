@@ -1,0 +1,160 @@
+= 9. Workflows
+
+A workflow links job templates into one process. Each node can run when the previous node succeeds, fails, or finishes either way.
+
+This workflow connects the jobs from the previous exercises:
+
+. Install Windows updates.
+. Install IIS with the advanced role.
+. Install packages with Chocolatey.
+. Collect Chocolatey facts and configuration.
+
+image::9-win-workflow-0.png[Finished workflow,link=self,window=_blank]
+
+[#create-the-workflow]
+== ☑️ Creating the workflow
+
+In automation controller, open *Automation Execution* → *Templates*. Click *Create template* and choose *Create workflow job template*.
+
+[cols="1,2",options="header"]
+|===
+| Field | Value
+
+| Name
+| Example Workflow
+
+| Description
+| End-to-end process
+
+| Organization
+| Default
+
+| Inventory
+| Workshop Inventory
+
+| Limit
+| windows
+|===
+
+image::9-win-workflow-1.png[Create the workflow template,link=self,window=_blank]
+
+Click *Create workflow job template*. The workflow visualizer opens. You can return to it later from the template's *Visualizer* tab.
+
+[#add-the-jobs]
+== ☑️ Adding the jobs
+
+=== Windows Updates
+
+Click *Add step* and select the *Windows Updates* job template.
+
+[cols="1,2",options="header"]
+|===
+| Field | Value
+
+| Node type
+| Job template
+
+| Job template
+| Windows Updates
+
+| Convergence
+| Any
+|===
+
+image::9-win-workflow-2.png[Add the Windows Updates node,link=self,window=_blank]
+
+Click *Next*, then *Finish*.
+
+=== IIS Advanced
+
+On the *Windows Updates* node, open the menu and select *Add step and link*.
+
+image::9-win-workflow-3.png[Add a linked step,link=self,window=_blank]
+
+Select *IIS Advanced*.
+
+[cols="1,2",options="header"]
+|===
+| Field | Value
+
+| Node type
+| Job template
+
+| Job template
+| IIS Advanced
+
+| Status
+| Always run
+
+| Convergence
+| Any
+|===
+
+image::9-win-workflow-4.png[Link IIS Advanced,link=self,window=_blank]
+
+Click *Next*, then *Finish*. IIS runs even when the update job fails.
+
+=== Chocolatey
+
+On the *IIS Advanced* node, add a step and link *Chocolatey - Install Packages*.
+
+[cols="1,2",options="header"]
+|===
+| Field | Value
+
+| Node type
+| Job template
+
+| Job template
+| Chocolatey - Install Packages
+
+| Status
+| Run on success
+
+| Convergence
+| Any
+|===
+
+image::9-win-workflow-5.png[Link the Chocolatey install job,link=self,window=_blank]
+
+Click *Next*, then *Finish*.
+
+On *Chocolatey - Install Packages*, add a step and link *Chocolatey - Facts and configuration*.
+
+[cols="1,2",options="header"]
+|===
+| Field | Value
+
+| Node type
+| Job template
+
+| Job template
+| Chocolatey - Facts and configuration
+
+| Status
+| Run on success
+
+| Convergence
+| Any
+|===
+
+image::9-win-workflow-6.png[Link the Chocolatey facts job,link=self,window=_blank]
+
+Click *Next*, then *Finish*.
+
+Click *Save* in the visualizer.
+
+image::9-win-workflow-7.png[Save the workflow,link=self,window=_blank]
+
+[#run-the-workflow]
+== ☑️ Running the workflow
+
+Open *Templates* and launch *Example Workflow*. You can also open the workflow template and click *Launch template*.
+
+Each node shows its own job output as the workflow runs. Windows Updates can take several minutes and may reboot the host before IIS starts. The Chocolatey nodes run only when the node before them succeeds.
+
+image::9-win-workflow-8.png[Workflow results,link=self,window=_blank]
+
+== Troubleshooting
+
+If you have encountered an issue or have noticed something not quite right, please link:https://github.com/ansible/workshops/issues/new?labels=ansibe-builder&title=Issue+with+Windows+automation+90&assignees=amoyament[open an issue on GitHub].
