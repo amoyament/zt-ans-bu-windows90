@@ -38,11 +38,10 @@ containers:
         emptyDir: {}
       - name: gitea-varlib
         emptyDir: {}
-    commands: 
+    commands:
         - gitea admin user create --admin --username gitea --password gitea --email dummy@dummy.com --must-change-password=false
-        - sleep 10
         - gitea admin user create --admin --username student --password learn_ansible --must-change-password=false --email student@localhost
-        - sleep 10
+        - 'sh -c ''curl --retry 30 --retry-delay 2 --retry-connrefused -sf http://127.0.0.1:3000/api/v1/version && curl -sf -u student:learn_ansible -H Content-Type:application/json -d {"name":"workshop_project","auto_init":true,"private":false,"default_branch":"main"} http://127.0.0.1:3000/api/v1/user/repos'''
     memory: 2Gi
     services:
       - name: gitea
@@ -133,7 +132,7 @@ virtualmachines:
     image: "base-windows-ad-2022"
     memory: "16G"
     cores: 4
-    image_size: "60Gi"
+    image_size: "80Gi"
     tags:
       - key: "AnsibleGroup"
         value: "isolated"
