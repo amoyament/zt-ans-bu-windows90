@@ -141,6 +141,31 @@ cat <<EOF | tee /tmp/controller-setup.yml
         controller_username: admin
         controller_password: ansible123!
         validate_certs: false
+
+    - name: Read the modules allowed for ad hoc jobs
+      ansible.builtin.uri:
+        url: https://localhost/api/controller/v2/settings/jobs/
+        method: GET
+        url_username: admin
+        url_password: ansible123!
+        force_basic_auth: true
+        validate_certs: false
+        return_content: true
+      register: job_settings
+
+    - name: Allow win_chocolatey in Run command
+      ansible.builtin.uri:
+        url: https://localhost/api/controller/v2/settings/jobs/
+        method: PATCH
+        url_username: admin
+        url_password: ansible123!
+        force_basic_auth: true
+        validate_certs: false
+        body_format: json
+        status_code: 200
+        body:
+          AD_HOC_COMMANDS: "{{ job_settings.json.AD_HOC_COMMANDS + ['win_chocolatey'] }}"
+      when: "'win_chocolatey' not in job_settings.json.AD_HOC_COMMANDS"
 EOF
 
 # Collections used by the setup playbooks. Student jobs use the Windows execution environment.
