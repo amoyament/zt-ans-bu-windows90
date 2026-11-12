@@ -2,9 +2,11 @@
 
 Welcome to the {lab_name}!
 
+Exercises 1 through 6 are the 90-minute workshop. Exercises 7 through 9 are supplementary and stay available in the same lab if you have more time.
+
 == What you'll learn
 
-In this hands-on workshop, you will automate a Windows server with Red Hat Ansible Automation Platform. You will set up automation controller, run ad-hoc commands and playbooks, publish that automation as job templates and roles, and then patch Windows, install software with Chocolatey, and connect the jobs in a workflow.
+In this hands-on workshop, you will automate a Windows server with Red Hat Ansible Automation Platform. You will set up automation controller, run ad-hoc commands and playbooks, and publish that automation as job templates and roles. The supplementary exercises add Windows updates, Chocolatey package management, and a workflow that runs those jobs in order.
 
 You do the work from the controller web interface and Visual Studio Code. The Windows host is already part of your inventory.
 
@@ -12,11 +14,11 @@ You do the work from the controller web interface and Visual Studio Code. The Wi
 
 Windows administration often depends on manual updates, one-off software installs, and console changes that are hard to repeat or hand to someone else. Your organization has Ansible Automation Platform, but the Windows work is still outside that pipeline.
 
-This workshop puts that work into automation controller: credentials, a project, an inventory, and job templates a teammate can run again. Later exercises add Windows updates, Chocolatey package management, and a workflow that runs those jobs in order.
+This workshop puts that work into automation controller: credentials, a project, an inventory, and job templates a teammate can run again.
 
 == Workshop structure
 
-Modules 1 through 6 are the core path and are built for about 90 minutes. Modules 7 through 9 stay in the same lab and add patching, package management, and a workflow.
+Exercises 1 through 6 are the core path and are built for about 90 minutes. Exercises 7 through 9 are supplementary. They stay in the same lab and add patching, package management, and a workflow.
 
 [cols="1,3",options="header"]
 |===
