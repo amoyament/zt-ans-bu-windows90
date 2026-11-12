@@ -107,7 +107,7 @@ Add this playbook:
         msg: Python version is {{ check_python_version.stdout_lines[0] }} and Node.js version is {{ check_node_version.stdout_lines[0] }}
 ----
 
-`gather_facts` is disabled because this play does not use the discovered host facts. The first task removes any existing Python and Node.js packages, because a later exercise updates those packages and then runs this job again. The `win_command` tasks record the installed versions, and the debug task prints them.
+`gather_facts` is disabled because this play does not use the discovered host facts. The first task removes any existing Python and Node.js packages> This will be skipped in this run, but a later exercise runs this job again after the packages have been installed and updated. The `win_command` tasks record the installed versions, and the debug task prints them.
 
 Save, commit, and push:
 
