@@ -1,0 +1,30 @@
+lab:
+  # Core lab information
+  name: "Windows Automation Workshop (90min)"
+  shortname: "zt-ans-bu-windows90"
+  category: "Ansible, Windows"
+  tags: "Ansible, Windows"
+  maintainer: "Aubrey Trotter, atrotter@redhat.com"
+  
+  # Detailed description for description.adoc generation
+  description:
+    summary: "Learn core Windows automation with Red Hat Ansible Automation Platform using the automation controller web UI."
+    
+    goal: "Master Windows automation on Ansible Automation Platform, from ad-hoc commands and roles through patching, package management, and workflows."
+    concepts:
+      - "Configure Automation Controller with credentials, projects, and inventories"
+      - "Validate connectivity using ad-hoc commands"
+      - "Write playbooks to install and configure Internet Information Services (IIS)"
+      - "Build survey-driven job templates utilizing variables, loops, and handlers"
+      - "Refactor solutions into reusable roles managed in Git"
+      - "Install Windows updates with a survey-driven job template"
+      - "Install and configure software with Chocolatey"
+      - "Chain job templates in an automation controller workflow"
+      - "Execute automation within a Windows execution environment"
+
+    use_case: "Windows administrators seeking to modernize their operations by adopting scalable, secure, and reusable automation workflows."
+  
+  # Git references for deployment
+  git_ref:
+    production: "v0.0.1"
+    development: "main"

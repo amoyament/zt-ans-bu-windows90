@@ -4,6 +4,9 @@ antora:
   name: modules
   dir: www
   modules:
+    - name: index
+      label: "Welcome"
+      solveButton: false
     - name: module-01
       label: "Controller"
       solveButton: false
@@ -21,6 +24,15 @@ antora:
       solveButton: false
     - name: module-06
       label: "Roles"
+      solveButton: false
+    - name: module-07
+      label: "Windows Updates"
+      solveButton: false
+    - name: module-08
+      label: "Chocolatey"
+      solveButton: false
+    - name: module-09
+      label: "Workflows"
       solveButton: false
 
 tabs:

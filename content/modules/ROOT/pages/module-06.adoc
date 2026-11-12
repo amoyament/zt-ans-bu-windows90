@@ -251,4 +251,4 @@ When the job has successfully completed, verify that http://localhost:8080 and h
 
 You should now have a completed playbook, `site.yml` with a single role called `iis_simple`. The advantage of structuring your playbook into roles is that you can now add reusability to your playbooks as well as simplifying changes to variables, tasks, templates, etc.
 
-You have now completed the Windows 90 Workshop!
+The next exercises use this same Windows host to install updates, manage software with Chocolatey, and connect those jobs in a workflow.

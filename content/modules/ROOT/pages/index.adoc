@@ -1,43 +1,55 @@
 = {lab_name}
 
-The `lab_name` var, known as an asciidoc attribute, above was set in `./content/antora.yml` and can be used to set the lab_name or title of your content.
-You are both free to change its value and if you prefer to use a different var name, you can change the value of `lab_name`, for example to `title` in `./content/antora.yml` and then reference it in your content as `\{title}`. +
+Welcome to the {lab_name}!
 
-image::rhel-logo-black.jpg[rhel-logo-black,55%,55%]
+== What you'll learn
 
-== Variables
+In this hands-on workshop, you will automate a Windows server with Red Hat Ansible Automation Platform. You will set up automation controller, run ad-hoc commands and playbooks, publish that automation as job templates and roles, and then patch Windows, install software with Chocolatey, and connect the jobs in a workflow.
 
-Other vars can also be set there, such as `ssh_user` and `ssh_password`, and referenced inline in the lab content by using the `\{foo}` syntax.
+You do the work from the controller web interface and Visual Studio Code. The Windows host is already part of your inventory.
 
-This is another var, or asciidoc attribute, from `./content/antora.yml` {my_var}
+== The challenge
 
-== Writing your lab
+Windows administration often depends on manual updates, one-off software installs, and console changes that are hard to repeat or hand to someone else. Your organization has Ansible Automation Platform, but the Windows work is still outside that pipeline.
 
-Whatever type of content you are writing we'll refer to your *content* as "your lab" in this document.
+This workshop puts that work into automation controller: credentials, a project, an inventory, and job templates a teammate can run again. Later exercises add Windows updates, Chocolatey package management, and a workflow that runs those jobs in order.
 
-=== Lab structure
+== Workshop structure
 
-Wether you are writing a lab
+Modules 1 through 6 are the core path and are built for about 90 minutes. Modules 7 through 9 stay in the same lab and add patching, package management, and a workflow.
 
-* First, we will build a monolithic application already compiled as RPM packages and put it into a container. This will allow us to deploy the application, copy it between machines, and update it separately from the operating system. This process affords us a portable and easily maintained component instead of tightly coupling the application with your operating system maintenance.
+[cols="1,3",options="header"]
+|===
+| Module | Focus
 
-* In closing we will build a second container on a different operating system version that makes an application not packaged into RPMs. This will be similar to a web application deployment, positioning the correct files at the right locations. To do this, we will pull a project from GitHub and position the component files within our container image. The purpose of this is to achieve a portable application container that can deploy on several different versions of Red Hat Enterprise Linux. This also provides the benefit of decoupling your application maintenance, which would all happen by building new containers versus operating system maintenance. The container is no longer reliant on the operating system installed on the machine where the application is deployed.
+| xref:module-01.adoc[1. Controller]
+| Create credentials, a project, and review the Windows inventory
 
-. Now let's examine this cluster a bit more by describing the cluster (the `$GUID` environment variable is already set for you so you can immediately describe your individual cluster):
-+
-[source,sh,role=execute]
-----
-podman ps
-----
-+
-.Sample Output
-[source,texinfo,subs="attributes"]
-----
-CONTAINER ID  IMAGE                        COMMAND           CREATED      STATUS      PORTS                 NAMES
-2dcfee9e50c4  docker.io/library/httpd:2.4  httpd-foreground  3 hours ago  Up 3 hours  0.0.0.0:8080->80/tcp  showroom-httpd
-----
+| xref:module-02.adoc[2. Ad-Hoc Commands]
+| Check connectivity and inspect the Windows host
 
-=== Lab Access
+| xref:module-03.adoc[3. Playbooks]
+| Write a playbook that installs and starts IIS
 
-The terminal window to your right is *already* logged into the lab environment as the `{ssh_user}` user via `ssh`. 
-All steps of this lab are to be completed as the `{ssh_user}` user.
+| xref:module-04.adoc[4. Projects]
+| Run the playbook from a job template
+
+| xref:module-05.adoc[5. Advanced Playbooks]
+| Use variables, loops, handlers, and a survey
+
+| xref:module-06.adoc[6. Roles]
+| Refactor the playbook into a reusable role
+
+| xref:module-07.adoc[7. Windows Updates]
+| Install updates and choose whether the host reboots
+
+| xref:module-08.adoc[8. Chocolatey]
+| Install, update, and configure Windows software
+
+| xref:module-09.adoc[9. Workflows]
+| Chain the update, IIS, and Chocolatey jobs
+|===
+
+== Let's get started
+
+Open xref:module-01.adoc[Module 1] in the navigation menu and log in to automation controller.

@@ -12,6 +12,7 @@ containers:
       GITEA__database__DB_TYPE: sqlite3
       GITEA__database__PATH: /data/gitea/gitea.db
       GITEA__picture__DISABLE_GRAVATAR: "true"
+      GITEA__repository__DEFAULT_BRANCH: main
       GITEA__repository__DEFAULT_PRIVATE: "false"
       GITEA__repository__DEFAULT_PUSH_CREATE_PRIVATE: "false"
       GITEA__repository__ENABLE_PUSH_CREATE_ORG: "true"
@@ -38,11 +39,13 @@ containers:
         emptyDir: {}
       - name: gitea-varlib
         emptyDir: {}
-    commands: 
+    commands:
         - gitea admin user create --admin --username gitea --password gitea --email dummy@dummy.com --must-change-password=false
-        - sleep 10
         - gitea admin user create --admin --username student --password learn_ansible --must-change-password=false --email student@localhost
-        - sleep 10
+        - curl --retry 30 --retry-delay 2 --retry-connrefused -sf http://127.0.0.1:3000/api/v1/version
+        # k8s_exec splits this with shlex and execs it. Keep the JSON in single quotes.
+        # Wrapping it in sh -c lets that shell strip the quotes, and Gitea rejects the body.
+        - 'curl -sf -u student:learn_ansible -H Content-Type:application/json -d ''{"name":"workshop_project","auto_init":true,"private":false,"default_branch":"main"}'' http://127.0.0.1:3000/api/v1/user/repos'
     memory: 2Gi
     services:
       - name: gitea
@@ -130,10 +133,10 @@ virtualmachines:
           -----END CERTIFICATE-----
 
   - name: "windows"
-    image: "base-windows-ad-2022.qcow2"
+    image: "base-windows-ad-2022"
     memory: "16G"
     cores: 4
-    image_size: "60Gi"
+    image_size: "80Gi"
     tags:
       - key: "AnsibleGroup"
         value: "isolated"
@@ -152,7 +155,6 @@ virtualmachines:
       Set-ExecutionPolicy Bypass -Scope Process -Force
       iwr https://community.chocolatey.org/install.ps1 -UseBasicParsing | iex
       choco install microsoft-edge -y
-      slmgr /rearm
     services:
       - name: windows
         ports:

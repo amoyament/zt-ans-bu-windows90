@@ -128,7 +128,7 @@ number in SCM URL*)
 | SCM Type | Git |
 | SCM URL | http://gitea:3000/student/workshop_project.git | URL obtained from Step 1
 | SCM BRANCH | | Intentionally blank
-| SCM CREDENTIAL | Git Credential |
+| SOURCE CONTROL CREDENTIAL | Git Credential |
 |===
 
 +
@@ -216,3 +216,8 @@ ansible_winrm_server_cert_validation: ignore
 
 If you click the *HOSTS* button, you can view the hosts belonging to the windows group.
 You can find more information about these and other settings in our link:https://docs.ansible.com/ansible/latest/user_guide/windows.html[Windows Guides^]. The authentication settings are particularly important and you will need to review them and decide which method is best for your needs.
+
+
+== Troubleshooting
+
+If you have encountered an issue or have noticed something not quite right, please link:https://github.com/ansible/workshops/issues/new?labels=ansibe-builder&title=Issue+with+Windows+automation+90&assignees=amoyament[open an issue on GitHub].

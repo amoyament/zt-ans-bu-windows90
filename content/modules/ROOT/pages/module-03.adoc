@@ -162,7 +162,7 @@ git commit -m "adding install_iis.yml"
 git push
 ....
 
-We will have a a popup in vscode for us to authenticate:
+We will have a pop-up in vscode for us to authenticate:
 
 image::3-vs-auth.png[VS Code AUTH,link=self,window=_blank]
 
@@ -179,3 +179,7 @@ Ansible (well, YAML really) can be a bit particular about formatting
 especially around indentation/spacing. When you get back to the
 office, read up on this link:https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html[YAML Syntax^] a bit more and it will save you some headaches later. In the meantime, your completed playbook should look like this. Take note of the spacing and alignment.
 ====
+
+== Troubleshooting
+
+If you have encountered an issue or have noticed something not quite right, please link:https://github.com/ansible/workshops/issues/new?labels=ansibe-builder&title=Issue+with+Windows+automation+90&assignees=amoyament[open an issue on GitHub].
