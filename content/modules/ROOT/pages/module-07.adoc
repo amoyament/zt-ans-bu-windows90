@@ -111,7 +111,7 @@ Open the *Survey* tab and create the first question.
 | Multiple choice (multiple select)
 
 | Default option
-| CriticalUpdates, SecurityUpdates
+| CriticalUpdates
 
 | Options
 | Required
